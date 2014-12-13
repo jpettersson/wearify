@@ -10,10 +10,9 @@
         android:layout_height="wrap_content"
         android:text="Auth!"
         android:id="@+id/auth_btn"
+        android:onClick="authenticate"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="70dp"
-        android:onClick="authenticate" />
+        android:layout_centerHorizontal="true" />
 
     <Button
         android:layout_width="wrap_content"
@@ -24,4 +23,13 @@
         android:layout_below="@+id/auth_btn"
         android:layout_centerHorizontal="true"
         android:onClick="getPlaylists" />
+
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/playlist_list"
+        android:layout_below="@+id/get_playlists_btn"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="21dp"
+        android:layout_alignParentBottom="true" />
 </RelativeLayout>

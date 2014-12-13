@@ -8,6 +8,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -17,7 +21,12 @@ import com.jpettersson.wearify.volley.AuthenticatedJsonObjectRequest;
 import com.spotify.sdk.android.authentication.AuthenticationResponse;
 import com.spotify.sdk.android.authentication.SpotifyAuthentication;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 
 public class MainActivity extends Activity {
@@ -49,6 +58,13 @@ public class MainActivity extends Activity {
                 @Override
                 public void onResponse(JSONObject response) {
                     Log.i(TAG, response.toString());
+                    try {
+                        JSONArray jsonArray = response.getJSONArray("items");
+                        renderList(jsonArray);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
                 }
             }, new Response.ErrorListener() {
 
@@ -62,6 +78,43 @@ public class MainActivity extends Activity {
 
         // Access the RequestQueue through your singleton class.
         HttpManager.getInstance(this).addToRequestQueue(jsObjRequest);
+    }
+
+    private void renderList(JSONArray jsonArray) {
+        ArrayList<HashMap<String, String>> playlistItemList = new ArrayList<HashMap<String, String>>();
+
+        try{
+            for(int i=0;i < jsonArray.length();i++){
+                HashMap<String, String> map = new HashMap<String, String>();
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+
+                Log.i(TAG, jsonObject.toString());
+
+                map.put("id",  jsonObject.getString("id"));
+                map.put("name", jsonObject.getString("name"));
+                playlistItemList.add(map);
+            }
+        }catch(JSONException e)        {
+            Log.e("log_tag", "Error parsing data "+e.toString());
+        }
+
+        ListAdapter adapter = new SimpleAdapter(this, playlistItemList , R.layout.playlist_item,
+                new String[] { "name", "id" },
+                new int[] { R.id.name_text, R.id.id_text });
+
+
+        final ListView lv = (ListView)findViewById(R.id.playlist_list);
+        lv.setAdapter(adapter);
+
+        lv.setTextFilterEnabled(true);
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                @SuppressWarnings("unchecked")
+
+//                        Toast.makeText(Main.this, "ID '" + o.get("id") + "' was clicked.", Toast.LENGTH_SHORT).show();
+
+            }
+        });
     }
 
     @Override
