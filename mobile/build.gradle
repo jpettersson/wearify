@@ -31,4 +31,5 @@ dependencies {
     wearApp project(':wear')
     compile 'com.google.android.gms:play-services:+'
     compile 'com.spotify.sdk:spotifysdk:1.0.0-beta6@aar'
+    compile 'com.mcxiaoke.volley:library:1.0.+'
 }

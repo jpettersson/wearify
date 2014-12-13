@@ -9,8 +9,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.jpettersson.wearify.volley.AuthenticatedJsonObjectRequest;
 import com.spotify.sdk.android.authentication.AuthenticationResponse;
 import com.spotify.sdk.android.authentication.SpotifyAuthentication;
+
+import org.json.JSONObject;
 
 
 public class MainActivity extends Activity {
@@ -18,6 +25,7 @@ public class MainActivity extends Activity {
     private static final String TAG = "MainActivity";
     private static final String CLIENT_ID = "460d2cafee9d4cf39f913b131bcc80b5";
     private static final String REDIRECT_URI = "com-jpettersson-wearify://callback";
+    private String accessToken;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +39,31 @@ public class MainActivity extends Activity {
                 new String[]{"playlist-read-private"}, null, this);
     }
 
+    public void getPlaylists(View view) {
+
+        String url = "https://api.spotify.com/v1/users/jonathananderspettersson/playlists";
+
+        JsonObjectRequest jsObjRequest = new AuthenticatedJsonObjectRequest
+            (accessToken, Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+
+                @Override
+                public void onResponse(JSONObject response) {
+                    Log.i(TAG, response.toString());
+                }
+            }, new Response.ErrorListener() {
+
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    // TODO Auto-generated method stub
+                    Log.i(TAG, "Volley error!");
+                    error.printStackTrace();
+                }
+            });
+
+        // Access the RequestQueue through your singleton class.
+        HttpManager.getInstance(this).addToRequestQueue(jsObjRequest);
+    }
+
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
@@ -41,6 +74,7 @@ public class MainActivity extends Activity {
             String accessToken = response.getAccessToken();
             Log.i(TAG, "Authentication successful!");
             Log.i(TAG, "accessToken:" + accessToken);
+            this.accessToken = accessToken;
         }else{
             Log.i(TAG, "Authentication failed!");
         }
