@@ -19,8 +19,16 @@ android {
     }
 }
 
+repositories {
+    mavenCentral()
+    flatDir {
+        dirs 'libs'
+    }
+}
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     wearApp project(':wear')
     compile 'com.google.android.gms:play-services:+'
+    compile 'com.spotify.sdk:spotifysdk:1.0.0-beta6@aar'
 }
