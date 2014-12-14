@@ -53,6 +53,8 @@ public class DataLayer {
         PutDataMapRequest requestDataMap = PutDataMapRequest.create(PLAYLISTS_PATH);
 
         requestDataMap.getDataMap().putDataMapArrayList("playlistItems", itemArray);
+        requestDataMap.getDataMap().putLong("timestamp", System.currentTimeMillis());
+
         PutDataRequest request = requestDataMap.asPutDataRequest();
         PendingResult<DataApi.DataItemResult> pendingResult = Wearable.DataApi
                 .putDataItem(GoogleApiManager.getInstance(context).getGoogleApiClient(), request);

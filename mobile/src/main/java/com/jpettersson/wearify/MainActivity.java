@@ -3,6 +3,7 @@ package com.jpettersson.wearify;
 import android.app.Activity;
 import android.app.SearchManager;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -28,6 +29,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -38,6 +42,7 @@ public class MainActivity extends Activity {
     private static final String CLIENT_ID = "460d2cafee9d4cf39f913b131bcc80b5";
     private static final String REDIRECT_URI = "com-jpettersson-wearify://callback";
     private String accessToken;
+    private JSONArray playlistsJSONArray;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,11 +79,8 @@ public class MainActivity extends Activity {
                 public void onResponse(JSONObject response) {
                     Log.i(TAG, response.toString());
                     try {
-                        JSONArray jsonArray = response.getJSONArray("items");
-
-                        renderList(jsonArray);
-                        DataLayer.writePlaylists(jsonArray, getBaseContext());
-
+                        playlistsJSONArray = response.getJSONArray("items");
+                        renderList(playlistsJSONArray);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -96,6 +98,11 @@ public class MainActivity extends Activity {
 
         // Access the RequestQueue through your singleton class.
         HttpManager.getInstance(this).addToRequestQueue(jsObjRequest);
+    }
+
+    public void writeToDataLayer(View view) {
+        Log.i(TAG, "Write to DataLayer");
+        DataLayer.writePlaylists(playlistsJSONArray, getBaseContext());
     }
 
     private void renderList(JSONArray jsonArray) {

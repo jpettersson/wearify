@@ -12,17 +12,16 @@
         android:id="@+id/auth_btn"
         android:onClick="authenticate"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignParentStart="true" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Get playlists!"
         android:id="@+id/get_playlists_btn"
-        android:layout_marginTop="27dp"
-        android:layout_below="@+id/auth_btn"
-        android:layout_centerHorizontal="true"
-        android:onClick="getPlaylists" />
+        android:onClick="getPlaylists"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
 
     <ListView
         android:layout_width="wrap_content"
@@ -32,4 +31,14 @@
         android:layout_alignParentStart="true"
         android:layout_marginTop="21dp"
         android:layout_alignParentBottom="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sync!"
+        android:id="@+id/sync_btn"
+        android:layout_above="@+id/playlist_list"
+        android:onClick="writeToDataLayer"
+        android:layout_alignEnd="@+id/playlist_list" />
+
 </RelativeLayout>
