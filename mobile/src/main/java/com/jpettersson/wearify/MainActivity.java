@@ -46,6 +46,18 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        DataLayer.connect(this);
+    }
+
+    @Override
+    protected void onStop() {
+        DataLayer.disconnect(this);
+        super.onStop();
+    }
+
     public void authenticate(View view) {
         SpotifyAuthentication.openAuthWindow(CLIENT_ID, "token", REDIRECT_URI,
                 new String[]{"playlist-read-private"}, null, this);
@@ -63,7 +75,10 @@ public class MainActivity extends Activity {
                     Log.i(TAG, response.toString());
                     try {
                         JSONArray jsonArray = response.getJSONArray("items");
+
                         renderList(jsonArray);
+                        DataLayer.writePlaylists(jsonArray, getBaseContext());
+
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
