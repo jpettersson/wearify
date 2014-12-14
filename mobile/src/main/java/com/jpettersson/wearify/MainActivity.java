@@ -1,9 +1,12 @@
 package com.jpettersson.wearify;
 
 import android.app.Activity;
+import android.app.SearchManager;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -81,7 +84,7 @@ public class MainActivity extends Activity {
     }
 
     private void renderList(JSONArray jsonArray) {
-        ArrayList<HashMap<String, String>> playlistItemList = new ArrayList<HashMap<String, String>>();
+        final ArrayList<HashMap<String, String>> playlistItemList = new ArrayList<HashMap<String, String>>();
 
         try{
             for(int i=0;i < jsonArray.length();i++){
@@ -90,7 +93,7 @@ public class MainActivity extends Activity {
 
                 Log.i(TAG, jsonObject.toString());
 
-                map.put("id",  jsonObject.getString("id"));
+                map.put("uri",  jsonObject.getString("uri"));
                 map.put("name", jsonObject.getString("name"));
                 playlistItemList.add(map);
             }
@@ -99,7 +102,7 @@ public class MainActivity extends Activity {
         }
 
         ListAdapter adapter = new SimpleAdapter(this, playlistItemList , R.layout.playlist_item,
-                new String[] { "name", "id" },
+                new String[] { "name", "uri" },
                 new int[] { R.id.name_text, R.id.id_text });
 
 
@@ -109,10 +112,14 @@ public class MainActivity extends Activity {
         lv.setTextFilterEnabled(true);
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                @SuppressWarnings("unchecked")
-
-//                        Toast.makeText(Main.this, "ID '" + o.get("id") + "' was clicked.", Toast.LENGTH_SHORT).show();
-
+                final Intent intent = new Intent(Intent.ACTION_MAIN);
+                intent.setAction(MediaStore.INTENT_ACTION_MEDIA_PLAY_FROM_SEARCH);
+//                intent.setComponent(new ComponentName("com.spotify.music", "MainActivity"));
+                String playlistUri = playlistItemList.get(position).get("uri");
+                Log.i(TAG, "Open playlist: " + playlistUri);
+                Uri uri = Uri.parse(playlistUri);
+                intent.setData(uri);
+                startActivity(intent);
             }
         });
     }
