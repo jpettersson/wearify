@@ -1,19 +1,21 @@
-# wearify
+# Wearify
 
-A weekend **hack** that allows you to start playing Spotify playlists from your Wear watch. While already useful, this project is not a final product. Use it as a implementation reference or play around with it for fun. 
+A weekend _**hack**_ that allows you to start playing Spotify playlists from your Wear watch. While already useful, this project is not a final product. Use it as a implementation reference or play around with it for fun. 
 
 ## Why?
 
-I believe the key for wearables to work as a modality for input is that they actually improve the user experience beyond mobile apps. This app adds a small amount of usefulness to a common use case: Start a Spotify playlist when I can't reach my phone. For instance, when I'm standing on the subway. 
+This app adds a small amount of usefulness to a common use case: Start a Spotify playlist when I can't reach my phone. For instance, when I'm standing on the subway. 
 
 ## How does it work? 
 
-The gradle project contains two applications: 
+The standard Android Studio gradle project contains two applications: 
 
 * A playlist browser running on the wear watch
 * A companion mobile app responsible for authenticating with Spotify and download Playlists
 
-The application is not distributed in the Play store, so you need to clone and build this project if you want to try it out. it's a standard Android Studio gradle project.
+The application is not distributed in the Play store, so you need to clone and build this project if you want to try it out. 
+
+## How to use it
 
 0. Install the Wear app on your Wear device. 
 1. Install the Mobile app on your mobile device.
