@@ -2,6 +2,9 @@
 
 A weekend _**hack**_ that allows you to start playing Spotify playlists from your Wear watch. While already useful, this project is not a final product. Use it as a implementation reference or play around with it for fun. 
 
+![Image of Wear device](https://lh4.googleusercontent.com/WtQL7wvsJ0oZVlU9QLN7yfUm81Tf-fVYnL01QoOccIe1QrD5MNcrSUBXh2lBkxhTpUUEuhvH8Q=w706-h343)<br />
+*Tap a playlist to start playback from mobile device.*
+
 ## Why?
 
 This app adds a small amount of usefulness to a common use case: Start a Spotify playlist when I can't reach my phone. For instance, when I'm standing on the subway. 
