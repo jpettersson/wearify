@@ -19,7 +19,7 @@
         android:layout_height="wrap_content"
         android:text="Get playlists!"
         android:id="@+id/get_playlists_btn"
-        android:onClick="getPlaylists"
+        android:onClick="getUsername"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
 

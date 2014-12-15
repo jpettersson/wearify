@@ -41,8 +41,10 @@ public class MainActivity extends Activity {
     private static final String TAG = "MainActivity";
     private static final String CLIENT_ID = "460d2cafee9d4cf39f913b131bcc80b5";
     private static final String REDIRECT_URI = "com-jpettersson-wearify://callback";
+    private String mUsername;
     private String accessToken;
-    private JSONArray playlistsJSONArray;
+    private ArrayList<HashMap<String, String>> playlistItemList;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,19 +70,73 @@ public class MainActivity extends Activity {
                 new String[]{"playlist-read-private"}, null, this);
     }
 
-    public void getPlaylists(View view) {
-
-        String url = "https://api.spotify.com/v1/users/jonathananderspettersson/playlists";
+    public void getUsername(View view) {
+        String usernameUrl = "https://api.spotify.com/v1/me";
 
         JsonObjectRequest jsObjRequest = new AuthenticatedJsonObjectRequest
-            (accessToken, Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+                (accessToken, Request.Method.GET, usernameUrl, null, new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.i(TAG, response.toString());
+                        try {
+                            mUsername = response.getString("id");
+                            getPlaylists();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // TODO Auto-generated method stub
+                        Log.i(TAG, "Volley error!");
+                        error.printStackTrace();
+                    }
+                });
+
+        // Access the RequestQueue through your singleton class.
+        HttpManager.getInstance(this).addToRequestQueue(jsObjRequest);
+    }
+
+    public void getPlaylists() {
+
+        String playlistUrl = "https://api.spotify.com/v1/users/" + mUsername + "/playlists?limit=50";
+
+        JsonObjectRequest jsObjRequest = new AuthenticatedJsonObjectRequest
+            (accessToken, Request.Method.GET, playlistUrl, null, new Response.Listener<JSONObject>() {
 
                 @Override
                 public void onResponse(JSONObject response) {
                     Log.i(TAG, response.toString());
                     try {
-                        playlistsJSONArray = response.getJSONArray("items");
-                        renderList(playlistsJSONArray);
+                        JSONArray jsonArray = response.getJSONArray("items");
+                        playlistItemList = new ArrayList<HashMap<String, String>>();
+
+                        // Manually add the "special" starred playlist. Long live starred! :)
+                        HashMap<String, String> starred = new HashMap<>();
+                        starred.put("uri", "spotify:user:" + mUsername + ":starred");
+                        starred.put("name", "Starred");
+                        playlistItemList.add(starred);
+
+                        try{
+                            for(int i=0;i < jsonArray.length();i++){
+                                HashMap<String, String> map = new HashMap<String, String>();
+                                JSONObject jsonObject = jsonArray.getJSONObject(i);
+
+                                Log.i(TAG, jsonObject.toString());
+
+                                map.put("uri",  jsonObject.getString("uri"));
+                                map.put("name", jsonObject.getString("name"));
+                                playlistItemList.add(map);
+                            }
+                        }catch(JSONException e)        {
+                            Log.e("log_tag", "Error parsing data "+e.toString());
+                        }
+
+                        renderList();
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -102,27 +158,10 @@ public class MainActivity extends Activity {
 
     public void writeToDataLayer(View view) {
         Log.i(TAG, "Write to DataLayer");
-        DataLayer.writePlaylists(playlistsJSONArray, getBaseContext());
+        DataLayer.writePlaylists(playlistItemList, getBaseContext());
     }
 
-    private void renderList(JSONArray jsonArray) {
-        final ArrayList<HashMap<String, String>> playlistItemList = new ArrayList<HashMap<String, String>>();
-
-        try{
-            for(int i=0;i < jsonArray.length();i++){
-                HashMap<String, String> map = new HashMap<String, String>();
-                JSONObject jsonObject = jsonArray.getJSONObject(i);
-
-                Log.i(TAG, jsonObject.toString());
-
-                map.put("uri",  jsonObject.getString("uri"));
-                map.put("name", jsonObject.getString("name"));
-                playlistItemList.add(map);
-            }
-        }catch(JSONException e)        {
-            Log.e("log_tag", "Error parsing data "+e.toString());
-        }
-
+    private void renderList() {
         ListAdapter adapter = new SimpleAdapter(this, playlistItemList , R.layout.playlist_item,
                 new String[] { "name", "uri" },
                 new int[] { R.id.name_text, R.id.id_text });
@@ -136,7 +175,6 @@ public class MainActivity extends Activity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 final Intent intent = new Intent(Intent.ACTION_MAIN);
                 intent.setAction(MediaStore.INTENT_ACTION_MEDIA_PLAY_FROM_SEARCH);
-//                intent.setComponent(new ComponentName("com.spotify.music", "MainActivity"));
                 String playlistUri = playlistItemList.get(position).get("uri");
                 Log.i(TAG, "Open playlist: " + playlistUri);
                 Uri uri = Uri.parse(playlistUri);
@@ -149,11 +187,12 @@ public class MainActivity extends Activity {
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        Log.i(TAG, "New intent!");
         Uri uri = intent.getData();
+        Log.i(TAG, "New intent!" + uri);
         if (uri != null) {
             AuthenticationResponse response = SpotifyAuthentication.parseOauthResponse(uri);
             String accessToken = response.getAccessToken();
+
             Log.i(TAG, "Authentication successful!");
             Log.i(TAG, "accessToken:" + accessToken);
             this.accessToken = accessToken;

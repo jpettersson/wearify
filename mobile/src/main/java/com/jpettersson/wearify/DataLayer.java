@@ -34,20 +34,15 @@ public class DataLayer {
         GoogleApiManager.getInstance(context).disconnect();
     }
 
-    public static void writePlaylists(JSONArray jsonArray, Context context) {
+    public static void writePlaylists(ArrayList<HashMap<String, String>> playlistItemList, Context context) {
 
         ArrayList<DataMap> itemArray = new ArrayList<>();
 
-        try {
-            for(int i=0;i < jsonArray.length();i++) {
-                JSONObject jsonObject = jsonArray.getJSONObject(i);
-                DataMap dataMap = new DataMap();
-                dataMap.putString("uri", jsonObject.getString("uri"));
-                dataMap.putString("name", jsonObject.getString("name"));
-                itemArray.add(dataMap);
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
+        for(HashMap<String, String> playlistItem : playlistItemList) {
+            DataMap dataMap = new DataMap();
+            dataMap.putString("uri", playlistItem.get("uri"));
+            dataMap.putString("name", playlistItem.get("name"));
+            itemArray.add(dataMap);
         }
 
         PutDataMapRequest requestDataMap = PutDataMapRequest.create(PLAYLISTS_PATH);
