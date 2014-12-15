@@ -48,7 +48,6 @@ public class MainActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.i(TAG, "Awake!");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
     }
@@ -194,7 +193,6 @@ public class MainActivity extends Activity {
             String accessToken = response.getAccessToken();
 
             Log.i(TAG, "Authentication successful!");
-            Log.i(TAG, "accessToken:" + accessToken);
             this.accessToken = accessToken;
         }else{
             Log.i(TAG, "Authentication failed!");
@@ -215,7 +213,6 @@ public class MainActivity extends Activity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }

@@ -53,7 +53,7 @@ public class GoogleApiManager {
     }
 
     public void connect() {
-        if (!mResolvingError) {  // more about this later
+        if (!mResolvingError) {
             mGoogleApiClient.connect();
         }
     }

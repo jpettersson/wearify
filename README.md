@@ -31,7 +31,8 @@ The application is not distributed in the Play store, so you need to clone and b
 * Spotify Web API
 * Android Wear DataLayer & Messages
 
-## Known issues
+## Known issues & limitations
 
-* Playback of the special "Starred" playlist does not yet work.
-* Sometimes when the phone is locked you have to try starting a playlist 2-3 times before it actually starts playing.
+* Only the most recent 50 playlists are downloaded (no pagination yet)
+* Playback of the special "Starred" playlist does not yet work
+* Sometimes when the phone is locked you have to try starting a playlist 2-3 times before it actually starts playing

@@ -85,8 +85,6 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
                 new String[] { "name" },
                 new int[] { R.id.name_text });
 
-
-//        final ListView lv = (ListView)findViewById(R.id.playlist_list);
         mPlaylistListView.setAdapter(adapter);
 
         mPlaylistListView.setTextFilterEnabled(true);

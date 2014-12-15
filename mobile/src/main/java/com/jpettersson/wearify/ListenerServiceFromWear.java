@@ -45,9 +45,6 @@ public class ListenerServiceFromWear extends WearableListenerService {
                 e.printStackTrace();
             }
 
-//            Intent startIntent = new Intent(this, MyActivity.class);
-//            startIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//            startActivity(startIntent);
         }
 
     }
