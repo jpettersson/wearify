@@ -10,8 +10,9 @@ This app adds a small amount of usefulness to a common use case: Start a Spotify
 
 The standard Android Studio gradle project contains two applications: 
 
-* A playlist browser running on the wear watch
-* A companion mobile app responsible for authenticating with Spotify and download Playlists
+* A playlist browser running on the wear watch.
+* A companion mobile app responsible for authenticating with Spotify and downloading Playlists.
+* Playback inside the Spotify app is "remote controlled" using an Intent.
 
 The application is not distributed in the Play store, so you need to clone and build this project if you want to try it out. 
 
