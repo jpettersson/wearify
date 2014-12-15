@@ -13,5 +13,7 @@
         android:layout_weight="0.06"
         android:textColor="#ff1cff00"
         android:paddingTop="10pt"
-        android:paddingBottom="10pt" />
+        android:paddingBottom="10pt"
+        android:paddingLeft="3pt"
+        android:paddingRight="3pt" />
 </LinearLayout>
